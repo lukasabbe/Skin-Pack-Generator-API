@@ -11,7 +11,7 @@ export const generate_pack = async (mc_names: string[], gen_id: string) => {
     console.log("Generating pack for: ", mc_names);
     const uuids = await get_uuids_objects(mc_names);
     if (!uuids) return null;
-    const skins = await get_skins(uuids.map((uuid) => uuid.id));
+    const skins = await get_skins(uuids.map((uuid:any) => uuid.id));
     if (!skins) return null;
     const item = "carved_pumpkin";
 
