@@ -41,7 +41,7 @@
         5. Open Minecraft and select the pack in the resource packs menu. <br>
         6. Rename a carved pumpkin in an anvil to the name of the skin you want to use. <br>
         7. Enjoy your custom player statues in-game! <br></p>
-        <p>Note: The pack will be generated in a queue, so please be patient. <br>
+        <p>Note: The pack will be generated in a queue, so please be patient. <br></p>
     </div>
     <div class="input-section">
         <h2>Input Minecraft Usernames</h2>
@@ -81,7 +81,7 @@
                 const data = await res.json();
                 console.log(data); // Log the response data to the console for debugging
                 let start_amount = data.packsWating;
-                statusElement.innerText = "Waiting in queue... Total wating packs: " + data.packsWating;
+                statusElement.innerText = "Waiting in queue, total waiting packs: " + data.packsWating;
                 const int = setInterval(async () => {
                     const status = await (await fetch(link+"status/" + data.id)).json()
                     if (status.status == "ready"){
@@ -90,7 +90,10 @@
                         clearInterval(int);
                         return;
                     }
-                    statusElement.innerText = "Waiting in queue... Total wating packs: " + status.packsWating;
+                    if(status.status == "WAITING")
+                        statusElement.innerText = "Waiting in queue, total waiting packs: " + status.packsWating;
+                    else if(status.status == "GENERATING")
+                        statusElement.innerText = "Generating pack, this can take a around 30-60 seconds";
 
                 }, 1000);
             } else {
