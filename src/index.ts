@@ -16,7 +16,7 @@ const db = new sqlite3.Database('database.db');
 const queue = new PQueue({ concurrency: 1 });
 
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS packs (id TEXT PRIMARY KEY, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)`);
+    db.run(`CREATE TABLE IF NOT EXISTS packs (id TEXT PRIMARY KEY, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, ip TEXT)`);
     if(!fs.existsSync('ziped_skins')){
         fs.mkdirSync('ziped_skins');
     }
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     res.json({ service : 'API', status: 'running' });
 });
 
-app.post('/generate', (req, res) => {
+app.post('/generate', async (req, res) => {
     if(!req.body) {
         res.status(400).json({ error: 'body is required' });
         return;
@@ -51,7 +51,25 @@ app.post('/generate', (req, res) => {
         return;
     }
     const id = gen_id();
-    db.run(`INSERT INTO packs (id) VALUES (?)`, [id], function(err) {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    await new Promise((resolve, reject) => {
+        db.get(`SELECT * FROM packs WHERE ip = ?`, [ip], (err, row) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).json({ error: 'Error getting pack' });
+                return;
+            }
+            if (row) {
+                if(!fs.existsSync(`ziped_skins/${(row as any).id}/skin_pack.zip`)){
+                    res.status(400).json({ error: 'You already have a pack in queue' });
+                    return;
+                }
+            }
+            resolve(null);
+        })
+    });
+    db.run(`INSERT INTO packs (id, ip) VALUES (?, ?)`, [id, ip], function(err) {
         if (err) {
             console.error(err.message);
             res.status(500).json({ error: 'Error creating pack' });
@@ -60,6 +78,7 @@ app.post('/generate', (req, res) => {
         res.json({ id: id, status: 'in queue', packsWating: queue.size });
         add_pack_to_queue(id, names);
     });
+
 })
 
 app.get('/status/:id', (req, res) => {
