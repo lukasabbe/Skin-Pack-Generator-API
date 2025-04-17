@@ -68,7 +68,7 @@
                 setInterval(async () => {
                     const status = await (await fetch("https://skinpackapi.lukasabbe.com/status/" + data.id)).json()
                     if (status.status == "ready"){
-                        window.open("https://skinpackapi.lukasabbe.com/download/" + status.id)
+                        await window.open("https://skinpackapi.lukasabbe.com/download/" + status.id)
                         location.reload();
                         clearInterval(this);
                         return;
