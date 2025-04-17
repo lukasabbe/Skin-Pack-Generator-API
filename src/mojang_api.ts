@@ -7,6 +7,8 @@ export const get_skins = async (uuids: string[]) => {
         const url = `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`;
         const res = await fetch(url);
         if (!res.ok) {
+            console.error("Error getting uuids: ", res.status, res.statusText);
+            console.error("Response: ", await res.text());
             return null;
         }
         await wait(1050); // wait 1 second to avoid rate limit
@@ -37,6 +39,8 @@ export const get_uuids_objects = async (names: string[]) => {
             body: JSON.stringify(name_list)
         })
         if (!res.ok) {
+            console.error("Error getting uuids: ", res.status, res.statusText);
+            console.error("Response: ", await res.text());
             return null;
         }
         const data = await res.json();
