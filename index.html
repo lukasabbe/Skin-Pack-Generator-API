@@ -43,6 +43,7 @@
         <p id="status"></p>
     </div>
     <script>
+        const link = "https://skinpackapi.lukasabbe.com/";
         document.getElementById('username-form').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
             const usernames = document.getElementById('names').value.split(' ').map(name => name.trim()).filter(name => name !== '');
@@ -53,7 +54,7 @@
                     return;
                 }
                 const statusElement = document.getElementById('status');
-                const res = await fetch("https://skinpackapi.lukasabbe.com/generate", {
+                const res = await fetch(link+"generate", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -66,10 +67,11 @@
                 let start_amount = data.packsWating;
                 statusElement.innerText = "Waiting in queue... Total packets wating: " + data.packsWating;
                 setInterval(async () => {
-                    const status = await (await fetch("https://skinpackapi.lukasabbe.com/status/" + data.id)).json()
+                    const status = await (await fetch(link+"status/" + data.id)).json()
                     if (status.status == "ready"){
-                        await window.open("https://skinpackapi.lukasabbe.com/download/" + status.id)
-                        location.reload();
+                        window.open(link+"download/" + status.id)
+                        document.getElementById('status').innerText = "Pack is ready! Downloading...";
+                        document.getElementById('names').value = "";
                         clearInterval(this);
                         return;
                     }
