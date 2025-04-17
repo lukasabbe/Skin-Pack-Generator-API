@@ -34,13 +34,13 @@
     <div class="input-section">
         <h2>Input Minecraft Usernames</h2>
         <p>Input minecraft usernames, with a space in between all names, max 20 usernames at onces</p>
+        <p id="status"></p>
         <form id="username-form">
             <textarea name="Minecraft usernames" id="names" rows="4" cols="50"></textarea>
             <div class="button-container">
                 <button type="submit">Generate Skin Pack</button>
             </div>
         </form>
-        <p id="status"></p>
     </div>
     <script>
         const link = "https://skinpackapi.lukasabbe.com/";
@@ -69,7 +69,7 @@
                 const int = setInterval(async () => {
                     const status = await (await fetch(link+"status/" + data.id)).json()
                     if (status.status == "ready"){
-                        document.getElementById('status').innerText = "Pack is ready! Download link <a herf="+link+"download/" + status.id+" >Download</a>";
+                        document.getElementById('status').innerHTML = "Pack is ready! Download link <a herf=\""+link+"download/" + status.id+"\">Download</a>";
                         document.getElementById('names').value = "";
                         clearInterval(int);
                         return;
