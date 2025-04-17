@@ -1,0 +1,22 @@
+{
+    "model" : {
+        "type" : "minecraft:select",
+        "property" : "minecraft:component",
+        "component" :  "minecraft:custom_name",
+        "cases" : [
+            {%- for name in names %}
+                {
+                    "when": "{{ name }}",
+                    "model": {
+                        "type": "minecraft:model",
+                        "model": "skin_pack:item/{{name}}"
+                    }
+                }{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        ],
+        "fallback" : {
+            "type" : "minecraft:model",
+            "model": "minecraft:block/{{ item }}"
+        }
+    }
+}
