@@ -48,6 +48,10 @@
             const usernames = document.getElementById('names').value.split(' ').map(name => name.trim()).filter(name => name !== '');
             console.log(usernames); // Log the usernames to the console for debugging
             if (usernames.length > 0) {
+                if (usernames.length > 20) {
+                    alert('Please enter a maximum of 20 usernames.');
+                    return;
+                }
                 const statusElement = document.getElementById('status');
                 const res = await fetch("https://skinpackapi.lukasabbe.com/generate", {
                     method: "POST",
