@@ -84,6 +84,7 @@
                 statusElement.innerText = "Waiting in queue, total waiting packs: " + data.packsWating;
                 const int = setInterval(async () => {
                     const status = await (await fetch(link+"status/" + data.id)).json()
+                    console.log(status); // Log the status to the console for debugging
                     if (status.status == "READY"){
                         document.getElementById('status').innerHTML = "Pack is ready! <a href=\""+link+"download/" + status.id+"\">Download here</a>";
                         document.getElementById('names').value = "";
