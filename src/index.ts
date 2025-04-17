@@ -95,7 +95,7 @@ app.get('/download/:id', (req, res) => {
         }
         const row_data = row as any;
         if(fs.existsSync(`ziped_skins/${row_data.id}/skin_pack.zip`)){
-            res.download(`ziped_skins/${row_data.id}/skin_pack.zip`, `skin_pack.zip`, (err) => {
+            res.download(`ziped_skins/${row_data.id}/skin_pack.zip`, `skin_pack_${row_data.id}.zip`, (err) => {
                 if (err) {
                     console.error(err);
                     res.status(500).json({ error: 'Error downloading pack' });
