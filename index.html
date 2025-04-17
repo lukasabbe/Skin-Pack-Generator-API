@@ -16,7 +16,7 @@
             <div class="description">
                 <p>
                     Turn carved pumpkins into personalized player statues with just a few clicks! <br>
-                    Our resource pack generator lets you input Minecraft usernames, then easily download a custom resource pack. Rename a carved pumpkin in-game in an anvil, and the pumkin will become a statue of that skin
+                    This resource-pack generator lets you input Minecraft usernames, then easily download a custom resource pack. Rename a carved pumpkin in-game in an anvil, and the pumkin will become a statue of that skin
                 </p>
             </div>
         </div>
@@ -24,7 +24,7 @@
     </div>
     <div class="input-section">
         <h2>Input Minecraft Usernames</h2>
-        <p>Input minecraft usernames, with a "," in between</p>
+        <p>Input minecraft usernames, with a " " in between all names, max 20 usernames at onces</p>
         <form id="username-form">
             <textarea name="Minecraft usernames" id="names" rows="4" cols="50"></textarea>
             <div class="button-container">
@@ -36,7 +36,7 @@
     <script>
         document.getElementById('username-form').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
-            const usernames = document.getElementById('names').value.split(',').map(name => name.trim()).filter(name => name !== '');
+            const usernames = document.getElementById('names').value.split(' ').map(name => name.trim()).filter(name => name !== '');
             console.log(usernames); // Log the usernames to the console for debugging
             if (usernames.length > 0) {
                 const statusElement = document.getElementById('status');
