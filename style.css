@@ -1,0 +1,30 @@
+body {
+    background-color: azure;
+    font-family: "Montserrat", sans-serif;
+}
+
+.introduction {
+    text-align: center;
+    font-size: 16px;
+}
+
+.introduction img {
+    width: 40%;
+    height: auto;
+}
+
+.description {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin-bottom: 20px;
+}
+.centerd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input-section {
+    text-align: center;
+}
