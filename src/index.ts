@@ -16,7 +16,7 @@ const db = new sqlite3.Database('database.db');
 const queue = new PQueue({ concurrency: 1 });
 
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS packs (id TEXT PRIMARY KEY, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, ip TEXT)`);
+    db.run(`CREATE TABLE IF NOT EXISTS packs (id TEXT PRIMARY KEY, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, ip TEXT, status TEXT)`);
     if(!fs.existsSync('ziped_skins')){
         fs.mkdirSync('ziped_skins');
     }
@@ -53,23 +53,26 @@ app.post('/generate', async (req, res) => {
     const id = gen_id();
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-    await new Promise((resolve, reject) => {
-        db.get(`SELECT * FROM packs WHERE ip = ?`, [ip], (err, row) => {
+    if(!await new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM packs WHERE ip = ?`, [ip], (err, rows) => {
             if (err) {
                 console.error(err.message);
                 res.status(500).json({ error: 'Error getting pack' });
-                return;
+                resolve(false);
             }
-            if (row) {
-                if(!fs.existsSync(`ziped_skins/${(row as any).id}/skin_pack.zip`)){
-                    res.status(400).json({ error: 'You already have a pack in queue' });
-                    return;
+            if (rows) {
+                for(const row of rows){
+                    if((row as any).status == "GENERATING"){
+                        res.status(400).json({ error: 'You already have a pack in queue' });
+                        resolve(false);
+                    }
                 }
             }
-            resolve(null);
+            resolve(true);
         })
-    });
-    db.run(`INSERT INTO packs (id, ip) VALUES (?, ?)`, [id, ip], function(err) {
+    })) return;
+
+    db.run(`INSERT INTO packs (id, ip, status) VALUES (?, ?, ?)`, [id, ip, "GENERATING"], function(err) {
         if (err) {
             console.error(err.message);
             res.status(500).json({ error: 'Error creating pack' });
@@ -147,6 +150,7 @@ const gen_id = () => {
 }
 const add_pack_to_queue = async (id: string, names: string[]) => {
     await queue.add(async () => generate_pack(names, id))
+    db.run(`UPDATE packs SET status = ? WHERE id = ?`, ["READY", id]);
     db.all(`SELECT * FROM packs`, [], (err, rows) => {
         if(rows.length > 40){
             const oldest = rows.reduce((prev:any, current:any) => (prev.created_at < current.created_at) ? prev : current);
