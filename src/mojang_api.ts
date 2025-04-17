@@ -28,7 +28,7 @@ export const get_uuids_objects = async (names: string[]) => {
     }else{
         name_lists.push(names);
     }
-    const uuids = [];
+    const uuids = [] as any;
     const url = `https://api.minecraftservices.com/minecraft/profile/lookup/bulk/byname`;
     for (const name_list of name_lists) {
         const res = await fetch(url, {
@@ -39,13 +39,18 @@ export const get_uuids_objects = async (names: string[]) => {
             body: JSON.stringify(name_list)
         })
         if (!res.ok) {
-            console.error("Error getting uuids: ", res.status, res.statusText);
-            console.error("Response: ", await res.text());
-            return null;
+            if(res.status == 403) {
+                console.log("Mojang stopid, trying again in 1 second...")
+                await wait(1050);
+                const failed_data = await get_uuids_objects(name_list);
+                uuids.push(...failed_data);
+            }
+            else return null;
+        }else{
+            const data = await res.json();
+            uuids.push(...data);
+            await wait(1050); // wait 1 second to avoid rate limit
         }
-        const data = await res.json();
-        uuids.push(...data);
-        await wait(1050); // wait 1 second to avoid rate limit
     }
     return uuids;
 }
