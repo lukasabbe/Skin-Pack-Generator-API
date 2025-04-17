@@ -40,7 +40,7 @@
             console.log(usernames); // Log the usernames to the console for debugging
             if (usernames.length > 0) {
                 const statusElement = document.getElementById('status');
-                const res = await fetch("http://localhost:3000/generate", {
+                const res = await fetch("skinpackapi.lukasabbe.com/generate", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -53,9 +53,9 @@
                 let start_amount = data.packsWating;
                 statusElement.innerText = "Waiting in queue... Total packets wating: " + data.packsWating;
                 setInterval(async () => {
-                    const status = await (await fetch("http://localhost:3000/status/" + data.id)).json()
+                    const status = await (await fetch("skinpackapi.lukasabbe.com/status/" + data.id)).json()
                     if (status.status == "ready"){
-                        window.open("http://localhost:3000/download/" + status.id)
+                        window.open("skinpackapi.lukasabbe.com/download/" + status.id)
                         location.reload();
                         clearInterval(this);
                         return;
