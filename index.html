@@ -66,13 +66,12 @@
                 console.log(data); // Log the response data to the console for debugging
                 let start_amount = data.packsWating;
                 statusElement.innerText = "Waiting in queue... Total packets wating: " + data.packsWating;
-                setInterval(async () => {
+                const int = setInterval(async () => {
                     const status = await (await fetch(link+"status/" + data.id)).json()
                     if (status.status == "ready"){
-                        window.open(link+"download/" + status.id)
-                        document.getElementById('status').innerText = "Pack is ready! Downloading...";
+                        document.getElementById('status').innerText = "Pack is ready! Download link <a herf="+link+"download/" + status.id+" >Download</a>";
                         document.getElementById('names').value = "";
-                        clearInterval(this);
+                        clearInterval(int);
                         return;
                     }
                     statusElement.innerText = "Waiting in queue... Total packets wating: " + status.packsWating;
