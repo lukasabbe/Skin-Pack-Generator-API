@@ -20,7 +20,7 @@ export const generate_pack = async (mc_names: string[], gen_id: string) => {
     //create skin pack folder
     const temp_dir = fs.mkdtempSync("temp-pack-");
     fs.writeFileSync(`${temp_dir}/pack.mcmeta`, nj.render(path.join(_dirname, "../templates/pack_mcmeta.njk")));
-    fs.copyFileSync(path.join(_dirname, "../templates/pack.png"), `${temp_dir}/pack.png`);
+    fs.copyFileSync(path.join(_dirname, "../templates/icon.png"), `${temp_dir}/pack.png`);
     await make_dir_async(`${temp_dir}/assets/`);
     await make_dir_async(`${temp_dir}/assets/minecraft/`);
     await make_dir_async(`${temp_dir}/assets/minecraft/items/`);
