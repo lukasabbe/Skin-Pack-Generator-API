@@ -77,7 +77,7 @@
                 const data = await res.json();
                 console.log(data); // Log the response data to the console for debugging
                 let start_amount = data.packsWating;
-                statusElement.innerText = "Waiting in queue... Total packets wating: " + data.packsWating;
+                statusElement.innerText = "Waiting in queue... Total wating packs: " + data.packsWating;
                 const int = setInterval(async () => {
                     const status = await (await fetch(link+"status/" + data.id)).json()
                     if (status.status == "ready"){
@@ -86,7 +86,7 @@
                         clearInterval(int);
                         return;
                     }
-                    statusElement.innerText = "Waiting in queue... Total packets wating: " + status.packsWating;
+                    statusElement.innerText = "Waiting in queue... Total wating packs: " + status.packsWating;
 
                 }, 1000);
             } else {
