@@ -69,7 +69,7 @@
                 const int = setInterval(async () => {
                     const status = await (await fetch(link+"status/" + data.id)).json()
                     if (status.status == "ready"){
-                        document.getElementById('status').innerHTML = "Pack is ready! Download link <a herf=\""+link+"download/" + status.id+"\">Download</a>";
+                        document.getElementById('status').innerHTML = "Pack is ready! <a href=\""+link+"download/" + status.id+"\">Download here</a>";
                         document.getElementById('names').value = "";
                         clearInterval(int);
                         return;
