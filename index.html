@@ -58,8 +58,8 @@
         const link = "https://skinpackapi.lukasabbe.com/";
         document.getElementById('username-form').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
-            let usernames = document.getElementById('names').value.split(' ').map(name => name.trim()).filter(name => name !== '');
-            usernames = usernames.map(name => name.replace(/[^a-zA-Z0-9_]/g, '')); // Remove invalid characters
+            let usernames = document.getElementById('names').value.split(/\s+/).filter(Boolean); // Split the input by spaces and remove empty entries
+            usernames = usernames.map(username => username.trim()).filter(username => username.length > 0); // Trim whitespace and filter out empty usernames
             console.log(usernames); // Log the usernames to the console for debugging
             if (usernames.length > 0) {
                 if (usernames.length > 20) {
