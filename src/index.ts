@@ -149,7 +149,7 @@ const add_pack_to_queue = async (id: string, names: string[]) => {
         await new Promise((resolve, reject) => {
             db.run(`UPDATE packs SET status = ? WHERE id = ?`, ["GENERATING", id], async (err) => {
                 await generate_pack(names, id)
-                resolve(true);
+                resolve(true); 
             });
         })
     })
