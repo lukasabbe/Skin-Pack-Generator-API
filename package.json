@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ARR", 
+  "license": "ARR",
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
